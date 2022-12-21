@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="static/style.css" type="text/css">
+    <link rel="icon" href="static/sunny-outline-dark.svg" type="image/x-icon">
+    <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans&display=swap" rel="stylesheet">
+    <title>The Weather App</title>
+</head>
+<body>
+    <h1 class="title">The Weather App</h1>
+    <span class="dark_mode_label">Dark Mode</span>
+    <input type="checkbox" class="dark_mode" id="dark_mode" onclick="change_mode()">
+    <a id="search"  href="/search.html" class="location"><ion-icon name="location-outline"></ion-icon></a>
+    <a id="about"  href="/about.html" class="location" style="right:340px;"><ion-icon name="information-outline"></ion-icon></a>
+    <a id="loaction"  href="/" class="location" style="right:380px;"><ion-icon name="partly-sunny-outline"></ion-icon></a>
+    <div class="search_it">
+    <input autocomplete="off" type="search" id="search_bar" class="search" placeholder="Enter A Location" onkeyup="search(this.value)">
+    <fieldset class="recermend_citys" id="citys">
+        <a id="title" style="cursor: default;"><strong>Recommended Citys</strong></a>
+    </fieldset>
+    </div>
+    <br>
+<script>
+    const cities = ["Current Location","New York", "Los Angeles", "Chicago", "Houston", "Phoenix", "Philadelphia", "San Antonio", "San Diego", "Dallas", "San Jose","Austin", "Jacksonville", "Fort Worth", "Columbus", "San Francisco", "Charlotte", "Indianapolis", "Seattle", "Denver", "Washington D.C.","Boston", "Nashville", "El Paso", "Detroit", "Memphis", "Portland", "Oklahoma City", "Las Vegas", " Louisville", "Baltimore", "Milwaukee","Albuquerque", "Tucson", "Fresno", "Sacramento", "Mesa", "Atlanta", "Kansas City", "Colorado Springs", "Miami", "Raleigh", "Omaha","Long Beach", "Virginia Beach", "Oakland", "Minneapolis", "Tulsa", "Wichita", "New Orleans", "Arlington", "Tampa", "St. Louis", "Pittsburgh","Cincinnati", "Anaheim", "Toledo", "Tampa Bay", "Buffalo", "Saint Paul", "Corpus Christi", "Aurora", "Raleigh-Durham", "Newark", "Lexington","Anchorage", "Louisville", "Riverside", "Bakersfield", "Stockton", "Birmingham", "Jersey City", "Norfolk", "Baton Rouge", "Hialeah","Lincoln", "Greensboro", "Plano", "Rochester", "St. Petersburg", "Akron", "Orlando", "Glendale", "Garland", "Henderson", "Laredo","Chandler", "Durham", "Lubbock", "Winston-Salem", "North Las Vegas", "Gilbert", "Chesapeake", "Irvine", "Fremont", "Irving","San Bernardino", "Boise", "Glendale", "Richmond", "Spokane", "Des Moines", "Modesto", "Baton Rouge", "Tacoma", "Fontana", "Oxnard","Aurora", "Moreno Valley", "Yonkers", "Raleigh", "Huntington Beach", "Montgomery", "Amarillo", "Little Rock", "Akron", "Fayetteville","Shreveport", "Augusta", "Grand Rapids", "Mobile", "Salt Lake City", "Huntsville", "Tallahassee", "Grand Prairie", "Overland Park","Knoxville", "Worcester", "Brownsville", "Newport News", "Santa Clarita", "Providence", "Fort Lauderdale", "Garden Grove", "Chattanooga","Oceanside", "Rochester", "Pomona", "Elk Grove", "Salem", "Lancaster", "Corona", "Eugene", "McKinney", "Palmdale", "Pasadena", "Fort Collins","Hayward", "Pomona", "Escondido", "Kansas City", "Torrance", "Syracuse", "Bridgeport", "Cary", "Mesquite", "Cedar Rapids", "Sterling Heights","Charleston", "Visalia", "Bellevue",   "Paris", "London", "Madrid", "Rome", "Berlin", "Bucharest", "Vienna", "Budapest", "Munich", "Barcelona","Prague", "Lisbon", "Amsterdam", "Milan", "Brussels", "Hamburg", "Lyon", "Warsaw", "Zurich", "Dublin","Copenhagen", "Oslo", "Helsinki", "Bratislava", "Ljubljana", "Athens", "Reykjavik", "Budapest", "Luxembourg","Vilnius", "Tallinn", "Riga", "Sofia", "Minsk", "Belgrade", "Podgorica", "Skopje", "Zagreb", "Sarajevo","Belgrade", "Ljubljana", "Zagreb", "Sarajevo", "Podgorica", "Pristina", "Tirana", "Vaduz", "Monaco","San Marino", "Andorra", "Vatican City", "Oslo", "Copenhagen", "Stockholm", "Tallinn", "Reykjavik", "Vilnius", "Riga","Tbilisi", "Yerevan", "Ashgabat", "Dushanbe", "Bishkek", "Thimphu", "Kathmandu", "Dhaka", "Colombo", "Islamabad","Kabul", "Tashkent", "Baghdad", "Tehran", "Jerusalem", "Amman", "Beirut", "Damascus", "Ankara", "Istanbul", "Saint Petersburg", "Kiev", "Minsk", "Chisinau", "Tbilisi", "Yerevan", "Baku", "Ashgabat", "Dushanbe","Bishkek", "Thimphu", "Kathmandu", "Dhaka", "Colombo", "Islamabad", "Kabul", "Tashkent", "Baghdad", "Tehran","Jerusalem", "Amman", "Beirut", "Damascus", "Ankara", "Istanbul", "Moscow", "Saint Petersburg", "Kiev", "Minsk",  "Mumbai","Delhi","Bengaluru","Kolkata","Chennai","Ahmedabad","Hyderabad","Pune","Surat","Jaipur"];
+    var citys = document.getElementById("citys")
+    var search_bar = document.getElementById("search_bar")
+    search_bar.addEventListener("keyup", (event) =>{
+        if (event.key == "Enter"){
+            localStorage.setItem("city",search_bar.value)
+            window.open("/","_self")
+        }
+    })
+    for (var i = 0;i<cities.length;i++){
+        var a = document.createElement("a")
+        a.id = cities[i]
+        a.innerText = cities[i]
+        a.classList.add("city")
+        a.addEventListener("click", (event) =>{
+            if(event.target.id == "Current Location"){
+                localStorage.setItem("city","coords")
+            }else{
+                localStorage.setItem("city",event.target.id)
+            }
+            window.open("/","_self")
+        })
+        if (i>50){
+            a.style.display = "none";
+        }
+        citys.appendChild(a)
+    }
+    function search(a) {
+        var list = document.querySelectorAll(".city")
+        var amount = 0
+        for (var i = 0;i < list.length;i++){
+            var item = list[i].id.toLowerCase()
+            if (item.includes(a.toLowerCase())){
+                list[i].style.display = "block"
+                amount++
+            }else{
+                list[i].style.display = "none"
+            }
+        }
+        if (amount == 0){
+            citys.style.display = "none"
+            search_bar.style.borderBottomWidth = "1px"
+            search_bar.style.borderRadius = "10px"
+        }else{
+            citys.style.display = "block"
+            search_bar.style.borderBottomWidth = "0px"
+            search_bar.style.borderRadius = "10px 10px 0px 0px"    
+        }
+    }
+    var mode = localStorage.getItem("mode")
+    if (mode == null){
+        localStorage.setItem("mode",false)
+    }else{
+        if (mode == "true"){
+            document.getElementById("dark_mode").checked = true
+        }
+    }
+
+    function change_mode() {
+        if (document.getElementById("dark_mode").checked){
+            localStorage.setItem("mode",true)
+        }else{
+            localStorage.setItem("mode",false)
+        }
+    }
+</script>
+<script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+<script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+</body>
+</html>

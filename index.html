@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="static/style.css" type="text/css">
+    <link rel="icon" href="static/sunny-outline-dark.svg" type="image/x-icon">
+    <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Flow+Circular&family=IBM+Plex+Sans&display=swap" rel="stylesheet">
+    <title>The Weather App</title>
+</head>
+<body>
+    <h1 class="title">The Weather App</h1>
+    <span class="dark_mode_label">Dark Mode</span>
+    <input type="checkbox" class="dark_mode" id="dark_mode" onclick="change_mode()">
+    <a id="search"  href="/search.html" class="location"><ion-icon name="location-outline"></ion-icon></a>
+    <a id="about"  href="/about.html" class="location" style="right:340px;"><ion-icon name="information-outline"></ion-icon></a>
+    <a id="loaction"  href="/" class="location" style="right:380px;"><ion-icon name="partly-sunny-outline"></ion-icon></a>
+    <main class="main" id="main">
+        <a class="weather1">
+            <ion-icon id="weather_icon" class="weather_icon" name=""></ion-icon>
+            <br>
+            <span class="weather_place" id="place">.......</span>
+            <br>
+            <span id="weather" class="weather_type">...</span>
+            <span onclick="window.open('https://openweathermap.org/')" class="powered">Powered By Openweathermap</span>
+        </a>
+        <a class="weather2">
+            <span class="temps">
+                <span id="current_temp" class="current_temp" id="current_temp">....</span>
+                <br>
+                <span class="feels_like" id="feels">Feels Like ....</span>
+            </span>
+            <span class="min_max">
+                <strong class="min_max_title">Current Min/Max</strong><br>
+                <span class="temp_max_min" id="min">Min ....</span><br>
+                <span class="temp_max_min" id="max">Max ....</span>
+            </span>
+        </a>
+        <a class="weather3">
+            <span class="temps">
+                <span id="humid" class="current_temp">...</span>
+                <br>
+                <span class="feels_like">Humidity</span>
+            </span>
+            <span class="min_max">
+                <span class="temp_max_min" id="wind_speed">Wind Speed ....</span><br>
+                <span class="temp_max_min" id="wind_deg">Wind Direction ....</span>
+            </span>
+        </a>
+    </main>
+<script>
+    var lat,lon
+    var coords = false
+    const successCallback = (position) => {
+        lat = position.coords["latitude"]
+        lon = position.coords["longitude"]
+        coords = true
+        get_weather()
+    };
+    const errorCallback = (error) => {
+        city = "london"
+    };
+    var mode = localStorage.getItem("mode")
+    if (mode == null){
+        localStorage.setItem("mode",false)
+    }else{
+        if (mode == "true"){
+            document.getElementById("dark_mode").checked = true
+        }
+    }
+    if (localStorage.getItem("city") == null){
+        localStorage.setItem("city","london")
+        var city = "london"
+        get_weather()
+    }
+    else if(localStorage.getItem("city") == "coords"){
+        navigator.geolocation.getCurrentPosition(successCallback, errorCallback);
+    }
+    else{
+        var city = localStorage.getItem("city")
+        get_weather()
+    }
+
+    function change_mode() {
+        if (document.getElementById("dark_mode").checked){
+            localStorage.setItem("mode",true)
+        }else{
+            localStorage.setItem("mode",false)
+        }
+    }
+    var weather_data
+    function get_weather() {
+        if(coords){
+            city = "london"
+        }
+        response = fetch(`https://api.openweathermap.org/geo/1.0/direct?q=${city}&appid=d1f90162d65d1a464cbd1df8b24ac7dc`)
+          .then((response) => response.json())
+          .then((data) => {
+              if(!coords){
+                  lon = data[0]["lon"]
+                  lat = data[0]["lat"]
+              }
+              weather = fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&units=metric&appid=d1f90162d65d1a464cbd1df8b24ac7dc`)
+                .then((response) => response.json())
+                .then((weather_data) => {
+                    document.getElementById("place").innerText = weather_data["name"]
+                    document.getElementById("weather").innerText = weather_data["weather"][0]["main"]
+                    document.getElementById("current_temp").innerText = Math.round(weather_data["main"]["temp"])+"°C"
+                    document.getElementById("feels").innerText = "Feels Like "+Math.round(weather_data["main"]["feels_like"])+"°C"
+                    document.getElementById("min").innerText = "Min "+Math.round(weather_data["main"]["temp_min"])+"°C"
+                    document.getElementById("max").innerText = "Max "+Math.round(weather_data["main"]["temp_max"])+"°C"
+                    document.getElementById("wind_speed").innerText = "Wind Speed "+weather_data["wind"]["speed"]+"km/h"
+                    document.getElementById("wind_deg").innerText = "Wind Direction "+weather_data["wind"]["deg"]+"°"
+                    document.getElementById("humid").innerText = weather_data["main"]["humidity"]+"%"
+                    if (weather_data["weather"][0]["icon"] === "01d" || weather_data["weather"][0]["icon"] == "01n"){
+        
+                        document.getElementById("weather_icon").name = "sunny-outline"
+                    }
+                    else if (weather_data["weather"][0]["icon"] === "02d" || weather_data["weather"][0]["icon"] == "02n"){
+                        document.getElementById("weather_icon").name = "partly-sunny-outline"
+                    }
+                    else if (weather_data["weather"][0]["icon"] == "03d"||weather_data["weather"][0]["icon"] == "04d" || weather_data["weather"][0]["icon"] == "04n"|| weather_data["weather"][0]["icon"] == "03n" || weather_data["weather"][0]["icon"] == "50d"|| weather_data["weather"][0]["icon"] == "50n"){
+                        document.getElementById("weather_icon").name = "cloudy-outline"
+                    }else{
+                        console.log(weather_data["weather"][0]["icon"])
+                        document.getElementById("weather_icon").name = "rainy-outline"
+                    }
+                    document.getElementById("main").style.fontFamily = '"IBM Plex Sans", sans-serif'
+                })
+          })
+    }
+    setInterval(get_weather,50000)
+</script>
+<script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+<script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+</body>
+</html>

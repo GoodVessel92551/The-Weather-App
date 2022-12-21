@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="static/style.css" type="text/css">
+    <link rel="icon" href="static/sunny-outline-dark.svg" type="image/x-icon">
+    <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans&display=swap" rel="stylesheet">
+    <title>The Weather App</title>
+</head>
+<body>
+    <h1 class="title">The Weather App</h1>
+    <span class="dark_mode_label">Dark Mode</span>
+    <input type="checkbox" class="dark_mode" id="dark_mode" onclick="change_mode()">
+    <a id="search"  href="/search.html" class="location"><ion-icon name="location-outline"></ion-icon></a>
+    <a id="about"  href="/about.html" class="location" style="right:340px;"><ion-icon name="information-outline"></ion-icon></a>
+    <a id="loaction"  href="/" class="location" style="right:380px;"><ion-icon name="partly-sunny-outline"></ion-icon></a>
+    <main class="main2">
+        <h2>What Is The Weather App?</h2>
+        <p style="color:var(--text2);margin-left:10px;">The Weather App is a website that allows users to easily search for and view the current weather conditions in cities around the world. With a simple and intuitive interface, users can quickly enter the name of a city and view the current temperature, humidity, and other relevant weather data. The website does not offer forecasted weather information, but it does provide a detailed snapshot of the current weather conditions for a particular location. Whether you're planning a trip, need to know what to wear for the day, or just want to check in on the weather, The Weather App is a convenient resource for getting real-time weather data.</p>
+        <h2 style="margin-top:30px;">How Is It Made?</h2>
+        <p style="color:var(--text2);margin-left:10px;">The Weather App utilizes OpenWeatherMap's API, a web-based service that allows developers to retrieve current weather data and forecast information using simple HTTP requests. When a user searches for a specific city on The Weather App, the website sends an HTTP request to OpenWeatherMap's API servers, requesting the current weather data for that location. The API then responds with the requested data, which is displayed on The Weather App's website for the user to view. The Weather App's use of OpenWeatherMap's API ensures that the website is able to provide its users with reliable and accurate weather information for locations around the world.</p>
+    </main>
+    <script>
+    var mode = localStorage.getItem("mode")
+    if (mode == null){
+        localStorage.setItem("mode",false)
+    }else{
+        if (mode == "true"){
+            document.getElementById("dark_mode").checked = true
+        }
+    }
+
+    function change_mode() {
+        if (document.getElementById("dark_mode").checked){
+            localStorage.setItem("mode",true)
+        }else{
+            localStorage.setItem("mode",false)
+        }
+    }
+</script>
+<script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+<script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+</body>
+</html>
