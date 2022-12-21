@@ -95,14 +95,14 @@
         if(coords){
             city = "london"
         }
-        response = fetch(`https://api.openweathermap.org/geo/1.0/direct?q=${city}&appid=d1f90162d65d1a464cbd1df8b24ac7dc`)
+        response = fetch(`https://api.openweathermap.org/geo/1.0/direct?q=${city}&appid=ac1a186cdc056a545becc3ec6797f988`)
           .then((response) => response.json())
           .then((data) => {
               if(!coords){
                   lon = data[0]["lon"]
                   lat = data[0]["lat"]
               }
-              weather = fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&units=metric&appid=d1f90162d65d1a464cbd1df8b24ac7dc`)
+              weather = fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&units=metric&appid=ac1a186cdc056a545becc3ec6797f988`)
                 .then((response) => response.json())
                 .then((weather_data) => {
                     document.getElementById("place").innerText = weather_data["name"]
